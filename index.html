@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoodMeal – AI Recipes by Emotion</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 40px 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #222;
+    }
+
+    #chatbox {
+      width: 600px;
+      max-width: 95%;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .msg { margin: 10px 0; }
+    .user { text-align: right; color: #0078d4; font-weight: 500; }
+    .bot { text-align: left; color: #333; white-space: pre-wrap; }
+
+    #inputArea {
+      width: 600px;
+      max-width: 95%;
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      height: 40px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    button {
+      background: #0078d4;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #005fa3; }
+
+    #calendar-btn {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🥗 MoodMeal – AI Recipes by Emotion</h2>
+
+  <div id="chatbox"></div>
+
+  <div id="inputArea">
+    <textarea id="mood" placeholder="Describe your mood..."></textarea>
+    <textarea id="groceries" placeholder="List your groceries..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <button id="calendar-btn" onclick="addToCalendar()">📅 Add to Google Calendar</button>
+
+  <script>
+    const chatbox = document.getElementById('chatbox');
+
+    async function sendMessage() {
+      const mood = document.getElementById('mood').value.trim();
+      const groceries = document.getElementById('groceries').value.trim();
+      if (!mood || !groceries) {
+        alert("Please fill in both mood and groceries!");
+        return;
+      }
+
+      chatbox.innerHTML += `<div class='msg user'>🧑 Mood: ${mood}<br>Groceries: ${groceries}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mood, groceries })
+        });
+        const data = await res.json();
+        const output = data.output || "No response from server.";
+        chatbox.innerHTML += `<div class='msg bot'>🤖 ${output.replace(/\n/g, '<br>')}</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight;
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong while getting the recipes.");
+      }
+    }
+
+    async function addToCalendar() {
+      const title = prompt("Enter the recipe or event title:");
+      if (!title) return;
+      try {
+        const res = await fetch('/add_to_calendar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title })
+        });
+        const data = await res.json();
+        alert(data.result);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to add to Google Calendar.");
+      }
+    }
+  </script>
+</body>
+</html>

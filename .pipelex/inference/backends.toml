@@ -1,0 +1,15 @@
+####################################################################################################
+# Pipelex Inference Backends Configuration (fixed)
+####################################################################################################
+
+[default_backend]
+name = "blackboxai"
+
+[blackboxai]
+display_name = "BlackBox AI"
+enabled = true
+endpoint = "https://api.blackbox.ai/v1"
+api_key = "${BLACKBOX_API_KEY}"
+
+[internal]
+enabled = false

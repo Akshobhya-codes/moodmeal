@@ -1,0 +1,18 @@
+####################################################################################################
+# Pipelex Routing Profiles Configuration (fixed for Blackbox AI)
+####################################################################################################
+
+# Which profile to use (make sure this matches the one below)
+active = "all_blackboxai"
+
+####################################################################################################
+# Routing Profiles
+####################################################################################################
+
+[profiles.all_blackboxai]
+description = "Use Blackbox AI backend for all models"
+default = "blackboxai"
+
+# Optional: if you want to route specific models differently, you can list them here:
+[profiles.all_blackboxai.routes]
+"*": "blackboxai"
