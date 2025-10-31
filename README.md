@@ -19,11 +19,3 @@ Environment / secrets
   For example (PowerShell):
 
   $env:ANTHROPIC_API_KEY = "sk-..."
-
-To publish to GitHub:
-- Initialize git (already done locally if you committed), then add a remote and push:
-
-  git remote add origin <your-github-repo-url>
-  git push -u origin main
-
-If you want me to add the remote and push for you, provide the GitHub repo URL (HTTPS) or let me know if you'd like me to create the repo using the GitHub CLI (`gh`).
